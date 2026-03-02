@@ -15,9 +15,8 @@ from sklearn.metrics import (classification_report, accuracy_score,
                              roc_curve, auc)
 from sklearn.preprocessing import label_binarize, MinMaxScaler
 
-# ══════════════════════════════════════════════════════════════════════
 # STEP 1 : LOAD & DISPLAY RAW DATA
-# ══════════════════════════════════════════════════════════════════════
+
 df_raw = pd.read_csv(r"C:\Users\ACER\Downloads\UpdatedResumeDataSet_raw.csv")
 
 print("=" * 60)
@@ -35,9 +34,9 @@ print(df_raw.isnull().sum())
 print("\nData Types (Raw):")
 print(df_raw.dtypes)
 
-# ══════════════════════════════════════════════════════════════════════
+
 # STEP 2 : DATA CLEANING
-# ══════════════════════════════════════════════════════════════════════
+
 print("\n" + "=" * 60)
 print("DATA CLEANING STEPS")
 print("=" * 60)
@@ -78,9 +77,8 @@ print(f"Unique Categories     : {df['Category'].nunique()}")
 print("\nCategory Distribution:")
 print(df["Category"].value_counts().to_string())
 
-# ══════════════════════════════════════════════════════════════════════
 # STEP 3 : DISPLAY CLEAN DATA
-# ══════════════════════════════════════════════════════════════════════
+
 print("\n" + "=" * 60)
 print("CLEAN DATA OVERVIEW")
 print("=" * 60)
@@ -91,9 +89,9 @@ print(df.isnull().sum())
 print("\nData Types (Clean):")
 print(df.dtypes)
 
-# ══════════════════════════════════════════════════════════════════════
+
 # VISUALIZATION 1 — Category Distribution Bar Chart
-# ══════════════════════════════════════════════════════════════════════
+
 cat_counts = df["Category"].value_counts()
 colors = cm.tab20(np.linspace(0, 1, len(cat_counts)))
 
@@ -109,9 +107,9 @@ plt.title("Job Category Distribution")
 plt.tight_layout()
 plt.show()
 
-# ══════════════════════════════════════════════════════════════════════
+
 # VISUALIZATION 2 — Top 20 Most Common Skills
-# ══════════════════════════════════════════════════════════════════════
+
 all_words = " ".join(df["Resume"]).split()
 # Remove common stop words
 stop_words = {"and", "the", "of", "in", "to", "a", "with", "for", "is",
@@ -140,9 +138,9 @@ plt.title("Top 20 Most Common Skills Across All Resumes")
 plt.tight_layout()
 plt.show()
 
-# ══════════════════════════════════════════════════════════════════════
+
 # VISUALIZATION 3 — Top 10 Skills per Category (Top 5 Categories)
-# ══════════════════════════════════════════════════════════════════════
+
 top5_cats = df["Category"].value_counts().head(5).index.tolist()
 
 fig, axes = plt.subplots(1, 5, figsize=(22, 6))
@@ -159,9 +157,9 @@ plt.suptitle("Top 10 Skills for Top 5 Job Categories", fontsize=13, fontweight="
 plt.tight_layout()
 plt.show()
 
-# ══════════════════════════════════════════════════════════════════════
+
 # VISUALIZATION 4 — Missing Values Heatmap
-# ══════════════════════════════════════════════════════════════════════
+
 missing = df_raw.isnull().astype(int)
 plt.figure(figsize=(8, 4))
 plt.imshow(missing.T, aspect="auto", cmap="Reds", interpolation="none")
@@ -172,9 +170,9 @@ plt.title("Missing Values Heatmap (Raw Data Before Cleaning)")
 plt.tight_layout()
 plt.show()
 
-# ══════════════════════════════════════════════════════════════════════
+
 # STEP 4 : FEATURE EXTRACTION — TF-IDF
-# ══════════════════════════════════════════════════════════════════════
+
 print("\n" + "=" * 60)
 print("FEATURE EXTRACTION — TF-IDF VECTORIZER")
 print("=" * 60)
@@ -197,9 +195,8 @@ scaler = MinMaxScaler()
 X = scaler.fit_transform(X.toarray())
 classes = sorted(y.unique())
 
-# ══════════════════════════════════════════════════════════════════════
+
 # STEP 5 : DATASET SPLIT
-# ══════════════════════════════════════════════════════════════════════
 print("\n" + "=" * 60)
 print("DATASET SPLIT SUMMARY")
 print("=" * 60)
@@ -214,9 +211,7 @@ print(f"  Test Set              : {X_test.shape[0]} samples (20%)")
 print(f"  Validation            : 5-Fold Stratified Cross-Validation")
 print(f"  Each Fold             : ~{X_train.shape[0] // 5} samples per fold")
 
-# ══════════════════════════════════════════════════════════════════════
 # STEP 6 : HYPERPARAMETER TUNING
-# ══════════════════════════════════════════════════════════════════════
 print("\n" + "=" * 60)
 print("HYPERPARAMETER TUNING — GridSearchCV")
 print("=" * 60)
@@ -243,9 +238,7 @@ print(f"  Number of CV Folds        : 5")
 print(f"  Test Size                 : 20%")
 print(f"  Random State              : 42")
 
-# ══════════════════════════════════════════════════════════════════════
 # STEP 7 : CROSS-VALIDATION
-# ══════════════════════════════════════════════════════════════════════
 print("\n" + "=" * 60)
 print("CROSS-VALIDATION PERFORMANCE")
 print("=" * 60)
@@ -284,9 +277,7 @@ print(f"  Precision : {cv_pre:.4f}  ({cv_pre*100:.2f}%)")
 print(f"  Recall    : {cv_rec:.4f}  ({cv_rec*100:.2f}%)")
 print(f"  F1-Score  : {cv_f1:.4f}  ({cv_f1*100:.2f}%)")
 
-# ══════════════════════════════════════════════════════════════════════
 # STEP 8 : FINAL TEST SET EVALUATION
-# ══════════════════════════════════════════════════════════════════════
 print("\n" + "=" * 60)
 print("FINAL TEST SET PERFORMANCE")
 print("=" * 60)
@@ -313,9 +304,7 @@ print(f"  Precision : {test_pre:.4f}  ({test_pre*100:.2f}%)")
 print(f"  Recall    : {test_rec:.4f}  ({test_rec*100:.2f}%)")
 print(f"  F1-Score  : {test_f1:.4f}  ({test_f1*100:.2f}%)")
 
-# ══════════════════════════════════════════════════════════════════════
 # VISUALIZATION 5 — Metrics Comparison (CV vs Test)
-# ══════════════════════════════════════════════════════════════════════
 metric_names = ["Accuracy", "Precision", "Recall", "F1-Score"]
 cv_scores    = [cv_acc, cv_pre, cv_rec, cv_f1]
 test_scores  = [test_acc, test_pre, test_rec, test_f1]
@@ -337,9 +326,7 @@ for i, (cv, ts) in enumerate(zip(cv_scores, test_scores)):
 plt.tight_layout()
 plt.show()
 
-# ══════════════════════════════════════════════════════════════════════
 # VISUALIZATION 6 — Confusion Matrix
-# ══════════════════════════════════════════════════════════════════════
 cm_matrix = confusion_matrix(y_test, y_test_pred, labels=model.classes_)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm_matrix, display_labels=model.classes_)
 fig, ax = plt.subplots(figsize=(16, 12))
@@ -349,9 +336,7 @@ plt.tight_layout()
 plt.grid(False)
 plt.show()
 
-# ══════════════════════════════════════════════════════════════════════
 # VISUALIZATION 7 — ROC Curve (One-vs-Rest)
-# ══════════════════════════════════════════════════════════════════════
 y_test_bin = label_binarize(y_test, classes=classes)
 y_score    = model.predict_proba(X_test)
 
@@ -381,9 +366,7 @@ plt.legend(loc="lower right", fontsize=7, ncol=2)
 plt.tight_layout()
 plt.show()
 
-# ══════════════════════════════════════════════════════════════════════
 # VISUALIZATION 8 — AUC Bar Chart per Category
-# ══════════════════════════════════════════════════════════════════════
 auc_scores = [roc_auc[cls] for cls in classes]
 bar_colors_auc = ["green" if s >= 0.7 else "orange" if s >= 0.5 else "red" for s in auc_scores]
 
@@ -402,9 +385,7 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-# ══════════════════════════════════════════════════════════════════════
 # VISUALIZATION 9 — Feature Importance (Top Skills per Category)
-# ══════════════════════════════════════════════════════════════════════
 feature_names = vectorizer.get_feature_names_out()
 top_n = 10
 top6_cats = classes[:6]
@@ -427,9 +408,7 @@ plt.suptitle("Feature Importance : Top 10 Skills per Job Category", fontsize=13,
 plt.tight_layout()
 plt.show()
 
-# ══════════════════════════════════════════════════════════════════════
 # VISUALIZATION 10 — Prediction Probability (CLI)
-# ══════════════════════════════════════════════════════════════════════
 print("\n" + "=" * 60)
 print("JOB CATEGORY PREDICTION — CLI")
 print("=" * 60)
@@ -463,4 +442,4 @@ plt.xticks(rotation=15, ha="right")
 plt.title(f"Top 3 Predicted Job Categories\nInput: {user_input}")
 plt.ylim(0, max(top3_probs) + 0.1)
 plt.tight_layout()
-plt.show()
+plt.show() 
